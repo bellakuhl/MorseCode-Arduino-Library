@@ -1,5 +1,6 @@
 /*
-MorseCode.h - Library for writing in Morse code using servo on draw bot which also checks the motor speeds.
+MorseCode.cpp - Library for writing in Morse code using servo on draw bot which also checks the motor speeds.
+Morse code can be written out with a drawing bot with a pen attached to a servo, an LED, or a buzzer
 Created by Isabella Kuhl July 2018
 Released into public domain
 */
@@ -35,7 +36,8 @@ void begin() {
   attachInterrupt(0, countRight, CHANGE);
 }
 
-void MorseCode::init(int pin, int errorValue) {
+void MorseCode::initServo(int pin, int errorValue) {
+  mode = 's';
   myservo.attach(pin);
   _pin = pin;
   error = errorValue;
@@ -46,18 +48,77 @@ void MorseCode::init(int pin, int errorValue) {
   myservo.write(65);
 }
 
-void MorseCode::dot() {
-  myservo.write(85);
-  delay(DOT);
-  myservo.write(65);
-  delay(INNER_PAUSE);
+void MorseCode::initBuzzer(int pin, int errorValue) {
+  mode = 'b';
+  altpin = pin;
+  pinMode(pin, OUTPUT);
+  _pin = pin;
+  error = errorValue;
+  Motor.begin(I2C_ADDRESS);
+  pinMode(encoderL,INPUT);
+  pinMode(encoderR,INPUT);
+  begin();
+  digitalWrite(altpin, LOW);
 }
 
-void MorseCode::dash() {
-  myservo.write(85);
-  delay(DASH);
-  myservo.write(65);
-  delay(INNER_PAUSE);
+void MorseCode::initLED(int pin, int errorValue) {
+  mode = 'l';
+  altpin = pin;
+  pinMode(pin, OUTPUT);
+  _pin = pin;
+  error = errorValue;
+  Motor.begin(I2C_ADDRESS);
+  pinMode(encoderL,INPUT);
+  pinMode(encoderR,INPUT);
+  begin();
+  digitalWrite(altpin, LOW);
+}
+  
+
+void MorseCode::dot(char mode) {
+ switch (mode) {
+  case 'l':
+    digitalWrite(altpin, HIGH);
+    delay(DOT);
+    digitalWrite(altpin, LOW);
+    delay(INNER_PAUSE);
+    break;
+  case 'b':
+    digitalWrite(altpin, HIGH);
+    delay(500);
+    digitalWrite(altpin, LOW);
+    delay(500);
+    break;
+  case 's':
+    myservo.write(85);
+    delay(DOT);
+    myservo.write(65);
+    delay(INNER_PAUSE);
+    break;
+ }
+}
+
+void MorseCode::dash(char mode) {
+ switch (mode) {
+  case 'l':
+    digitalWrite(altpin, HIGH);
+    delay(DASH);
+    digitalWrite(altpin, LOW);
+    delay(INNER_PAUSE);
+    break;
+  case 'b':
+    digitalWrite(altpin, HIGH);
+    delay(1500);
+    digitalWrite(altpin, LOW);
+    delay(500);
+    break;
+  case 's':
+    myservo.write(85);
+    delay(DASH);
+    myservo.write(65);
+    delay(INNER_PAUSE);
+    break;
+ }
 }
 
 void MorseCode::translate(String sentence, int motorPower) {
@@ -68,109 +129,108 @@ void MorseCode::translate(String sentence, int motorPower) {
   c = toupper(c);
   switch (c) {
     case 'A':
-      MorseCode::dot(); MorseCode::dash();
+      MorseCode::dot(mode); MorseCode::dash(mode);
       break;
     case 'B':
-      MorseCode::dash(); MorseCode::dot();
-      MorseCode::dot(); MorseCode::dot();
+      MorseCode::dash(mode); MorseCode::dot(mode);
+      MorseCode::dot(mode); MorseCode::dot(mode);
       break;
     case 'C':
-      MorseCode::dash(); MorseCode::dot();
-      MorseCode::dash(); MorseCode::dot();
+      MorseCode::dash(mode); MorseCode::dot(mode);
+      MorseCode::dash(mode); MorseCode::dot(mode);
       break;
     case 'D':
-      MorseCode::dash(); MorseCode::dot();
-      MorseCode::dot();
+      MorseCode::dash(mode); MorseCode::dot(mode);
+      MorseCode::dot(mode);
       break;
     case 'E':
-      MorseCode::dot();
+      MorseCode::dot(mode);
       break;
     case 'F':
-      MorseCode::dot(); MorseCode::dot();
-      MorseCode::dash(); MorseCode::dot();
+      MorseCode::dot(mode); MorseCode::dot(mode);
+      MorseCode::dash(mode); MorseCode::dot(mode);
       break;
     case 'G':
-      MorseCode::dash(); MorseCode::dash();
-      MorseCode::dot();
+      MorseCode::dash(mode); MorseCode::dash(mode);
+      MorseCode::dot(mode);
       break;
     case 'H':
-      MorseCode::dot(); MorseCode::dot();
-      MorseCode::dot(); MorseCode::dot();
+      MorseCode::dot(mode); MorseCode::dot(mode);
+      MorseCode::dot(mode); MorseCode::dot(mode);
       MorseCode::drive(leftPower, rightPower);
       break;
     case 'I':
-      MorseCode::dot(); MorseCode::dot();
+      MorseCode::dot(mode); MorseCode::dot(mode);
       MorseCode::drive(leftPower, rightPower);
       break;
     case 'J':
-      MorseCode::dot(); MorseCode::dash();
-      MorseCode::dash(); MorseCode::dash();
+      MorseCode::dot(mode); MorseCode::dash(mode);
+      MorseCode::dash(mode); MorseCode::dash(mode);
       break;
     case 'K':
-      MorseCode::dash(); MorseCode::dot();
-      MorseCode::dash();
+      MorseCode::dash(mode); MorseCode::dot(mode);
+      MorseCode::dash(mode);
       break;
     case 'L':
-      MorseCode::dot(); MorseCode::dash();
-      MorseCode::dot();  MorseCode::dot();
+      MorseCode::dot(mode); MorseCode::dash(mode);
+      MorseCode::dot(mode);  MorseCode::dot(mode);
       break;
     case 'M':
-      MorseCode::dash(); MorseCode::dash();
+      MorseCode::dash(mode); MorseCode::dash(mode);
       break;
     case 'N':
-      MorseCode::dash();  MorseCode::dot();
+      MorseCode::dash(mode);  MorseCode::dot(mode);
       break;
     case 'O':
-      MorseCode::dash(); MorseCode::dash();
-      MorseCode::dash();
+      MorseCode::dash(mode); MorseCode::dash(mode);
+      MorseCode::dash(mode);
       break;
     case 'P':
-      MorseCode::dot(); MorseCode::dash();
-      MorseCode::dash();  MorseCode::dot();
+      MorseCode::dot(mode); MorseCode::dash(mode);
+      MorseCode::dash(mode);  MorseCode::dot(mode);
       break;
     case 'Q':
-      MorseCode::dash(); MorseCode::dash();
-      MorseCode::dot(); MorseCode::dash();
+      MorseCode::dash(mode); MorseCode::dash(mode);
+      MorseCode::dot(mode); MorseCode::dash(mode);
       break;
     case 'R':
-      MorseCode::dot(); MorseCode::dash();
-      MorseCode::dot();
+      MorseCode::dot(mode); MorseCode::dash(mode);
+      MorseCode::dot(mode);
       break;
     case 'S':
-      MorseCode::dot();  MorseCode::dot();
-      MorseCode::dot();
+      MorseCode::dot(mode);  MorseCode::dot(mode);
+      MorseCode::dot(mode);
       break;
     case 'T':
-      MorseCode::dash();
+      MorseCode::dash(mode);
       break;
     case 'U':
-      MorseCode::dot();  MorseCode::dot();
-      MorseCode::dash();
+      MorseCode::dot(mode);  MorseCode::dot(mode);
+      MorseCode::dash(mode);
       MorseCode::drive(leftPower, rightPower);
       break;
     case 'V':
-      MorseCode::dot();  MorseCode::dot();
-      MorseCode::dot(); MorseCode::dash();
+      MorseCode::dot(mode);  MorseCode::dot(mode);
+      MorseCode::dot(mode); MorseCode::dash(mode);
       break;
     case 'W':
-      MorseCode::dot(); MorseCode::dash();
-      MorseCode::dash();
+      MorseCode::dot(mode); MorseCode::dash(mode);
+      MorseCode::dash(mode);
       break;
     case 'X':
-      MorseCode::dash();  MorseCode::dot();
-      MorseCode::dot(); MorseCode::dash();
+      MorseCode::dash(mode);  MorseCode::dot(mode);
+      MorseCode::dot(mode); MorseCode::dash(mode);
       break;
     case 'Y':
-      MorseCode::dash();  MorseCode::dot();
-      MorseCode::dash(); MorseCode::dash();
+      MorseCode::dash(mode);  MorseCode::dot(mode);
+      MorseCode::dash(mode); MorseCode::dash(mode);
       break;
     case 'Z':
-      MorseCode::dash(); MorseCode::dash();
-      MorseCode::dot();  MorseCode::dot();
+      MorseCode::dash(mode); MorseCode::dash(mode);
+      MorseCode::dot(mode);  MorseCode::dot(mode);
       MorseCode::drive(leftPower, rightPower);
       break;
     default:
-      myservo.write(65);
       MorseCode::drive(leftPower, rightPower);
       break;
    }

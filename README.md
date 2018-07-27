@@ -1,6 +1,6 @@
 <h1>Drawingbot Morse Code Library For Use with Arduino and Servo</h1>
 
-<p>This is a library for generating <a href="http://en.wikipedia.org/wiki/Morse_code">Morse code</a> for a specified letter. It uses a servo library to control a pen attached to a servo on a drawing bot</p>
+<p>This is a library for generating <a href="http://en.wikipedia.org/wiki/Morse_code">Morse code</a> for a specified letter. It uses a servo library to control a pen attached to a servo on a drawing bot to drive straight while spelling out morse code. It can also be used with an LED or a buzzer to transmit the morse code.</p>
 
 <h2>Authorship and License</h2>
 
@@ -14,10 +14,8 @@
 
 <h2>Character Support</h2>
 
-<p>All uppercase letters are supported</p>
+<p>All uppercase and lowercase letters are supported</p>
 
 <h2>Motivation</h2>
 
-<p>This was written to be used with a WiFi enabled robot that has had a pen and servo mount added to it to enable it to draw. The pen is securely attached to the servo and as the robot moves forward the morse code corresponding to the characters inputted will be drawn out.</p>
-
-
+<p>This was written to be used with a WiFi enabled robot that has had a pen and servo mount added to it to enable it to draw. The pen is securely attached to the servo and as the robot moves forward the morse code corresponding to the characters inputted will be drawn out. The robot uses encoders on both wheels to track how far each tire has rotated and the power of each motor is adjusted accordingly to keep the bot driving straight. The library also has the ability to transmit Morse code using an LED or a buzzer if the pen isn't being used.</p>

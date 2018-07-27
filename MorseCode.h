@@ -1,5 +1,6 @@
 /*
 MorseCode.h - Library for writing in Morse code using servo on draw bot which also checks the motor speeds.
+Morse code can be written out with a drawing bot with a pen attached to a servo, an LED, or a buzzer
 Created by Isabella Kuhl July 2018
 Released into public domain
 */
@@ -19,13 +20,17 @@ static int rcount;
 static int leftPower;
 static int rightPower;
 static int error;
+static char mode;
+static int altpin;
 
 class MorseCode {
   public:
-    void init(int pin, int errorValue);
+    void initServo(int pin, int errorValue);
+    void initBuzzer(int pin, int errorValue);
+    void initLED(int altpin, int errorValue);
     void translate(String sentence, int motorPower);
-    void dot();
-    void dash();
+    void dot(char mode);
+    void dash(char mode);
     void drive(int leftPower, int rightPower);
     void countLeft();
     void countRight();
