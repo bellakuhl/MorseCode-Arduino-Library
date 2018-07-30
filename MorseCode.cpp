@@ -82,18 +82,21 @@ void MorseCode::dot(char mode) {
     delay(DOT);
     digitalWrite(altpin, LOW);
     delay(INNER_PAUSE);
+    MorseCode::drive(leftPower, rightPower); // call drive func to check that wheels are same speed
     break;
   case 'b':
     digitalWrite(altpin, HIGH);
     delay(500);
     digitalWrite(altpin, LOW);
-    delay(500);
+    delay(500);  // need to use a longer delay for buzzer
+    MorseCode::drive(leftPower, rightPower);
     break;
   case 's':
-    myservo.write(85);
+    myservo.write(85); // 85 puts pen down
     delay(DOT);
-    myservo.write(65);
+    myservo.write(65); // 65 is lifting pen up
     delay(INNER_PAUSE);
+    MorseCode::drive(leftPower, rightPower);
     break;
  }
 }
@@ -105,18 +108,21 @@ void MorseCode::dash(char mode) {
     delay(DASH);
     digitalWrite(altpin, LOW);
     delay(INNER_PAUSE);
+    MorseCode::drive(leftPower, rightPower);
     break;
   case 'b':
     digitalWrite(altpin, HIGH);
     delay(1500);
     digitalWrite(altpin, LOW);
     delay(500);
+    MorseCode::drive(leftPower, rightPower);
     break;
   case 's':
     myservo.write(85);
     delay(DASH);
     myservo.write(65);
     delay(INNER_PAUSE);
+    MorseCode::drive(leftPower, rightPower);
     break;
  }
 }
@@ -125,7 +131,7 @@ void MorseCode::translate(String sentence, int motorPower) {
  leftPower = motorPower;
  rightPower = motorPower;
  MorseCode::drive(leftPower, rightPower);
- for(char& c : sentence) {
+ for(char& c : sentence) { // runs through each letter of sentence
   c = toupper(c);
   switch (c) {
     case 'A':
@@ -157,7 +163,6 @@ void MorseCode::translate(String sentence, int motorPower) {
     case 'H':
       MorseCode::dot(mode); MorseCode::dot(mode);
       MorseCode::dot(mode); MorseCode::dot(mode);
-      MorseCode::drive(leftPower, rightPower);
       break;
     case 'I':
       MorseCode::dot(mode); MorseCode::dot(mode);
@@ -207,7 +212,6 @@ void MorseCode::translate(String sentence, int motorPower) {
     case 'U':
       MorseCode::dot(mode);  MorseCode::dot(mode);
       MorseCode::dash(mode);
-      MorseCode::drive(leftPower, rightPower);
       break;
     case 'V':
       MorseCode::dot(mode);  MorseCode::dot(mode);
@@ -228,7 +232,6 @@ void MorseCode::translate(String sentence, int motorPower) {
     case 'Z':
       MorseCode::dash(mode); MorseCode::dash(mode);
       MorseCode::dot(mode);  MorseCode::dot(mode);
-      MorseCode::drive(leftPower, rightPower);
       break;
     default:
       MorseCode::drive(leftPower, rightPower);
