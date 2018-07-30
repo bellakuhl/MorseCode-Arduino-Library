@@ -51,7 +51,7 @@ void square() {
     // lift up pen, turn, and put pen back down
     servo.write(65);
     Motor.speed(MOTOR1, 50);
-    delay(450);
+    delay(400);
     Motor.stop(MOTOR1);
     delay(1000);
   }
@@ -62,7 +62,7 @@ void square() {
 void spiral() {
   // put pen down
   servo.write(85);
-  for (int n = 0; n <= 5; n++) {
+  for (int n = 0; n <= 10; n++) {
     Motor.speed(MOTOR1, 50);
     delay(2200);
     Motor.speed(MOTOR2, 50);
