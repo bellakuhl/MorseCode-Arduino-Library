@@ -1,0 +1,26 @@
+#######################################
+# Syntax Coloring Map For MorseCode
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+MorseCode	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+initServo	KEYWORD2
+initBuzzer	KEYWORD2
+initLED	KEYWORD2
+translate	KEYWORD2
+dot	KEYWORD2
+dash	KEYWORD2
+drive	KEYWORD2
+countLeft	KEYWORD2
+countRight	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
